@@ -97,8 +97,6 @@ stm32f4xx_hal_driver/Src/%.o: ../stm32f4xx_hal_driver/Src/%.c
 	arm-none-eabi-gcc \
 		-D STM32F429_439xx -D STM32F429xx -D __VFP_FP__ \
 		-I ../base \
-		-I ../User_HandsOn \
-		-I ../startup \
 		-I ../stm32f4xx_hal_driver/Inc \
 		-O0 \
 		-ffunction-sections -fdata-sections \

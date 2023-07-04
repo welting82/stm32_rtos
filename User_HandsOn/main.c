@@ -2,6 +2,8 @@
 #include "stm32f4xx_hal.h"
 #include <string.h>
 #include <stdio.h>
+#include "FreeRTOS.h"
+#include "task.h"
 
 /*Function prototype for delay and UART2 configuration functions */
 void UART2_Configuration(void);
@@ -17,11 +19,6 @@ uint8_t loop_cnt = 0;
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	// if(huart->Instance == huart2.Instance)
-	// {
-	// 	HAL_UART_Transmit_IT(huart, (uint8_t*)&RX_Buffer, sizeof(RX_Buffer));
-	// 	// HAL_UART_Receive_IT(huart, (uint8_t*)&RX_Buffer, 10);
-	// }
 
 	if((Uart2_Rx_Cnt == sizeof(rec_data)-2) || (RX_Buffer == '\r') || (RX_Buffer == '\n'))
 	{
@@ -56,12 +53,6 @@ int main(void)
 		Delay_ms(500);
 	}
 }
-
-// TODO:GPIO
-// void GPIO_LED_Conf(void)
-// {
-// 	GPIO_InitTypeDef LED_GPIO_Handler;
-// }
 
 void UART2_Configuration(void)
 {
@@ -107,4 +98,35 @@ void Delay_ms(volatile int time_ms)
   int j;
   for(j = 0; j < time_ms*4000; j++)
     {}  /* excute NOP for 1ms */
+}
+
+
+void vAssertCalled( const char * pcFile, unsigned long ulLine )
+{
+  volatile unsigned long ul = 0;
+
+  ( void ) pcFile;
+  ( void ) ulLine;
+
+  vTaskSuspendAll();
+  taskENTER_CRITICAL();
+  {
+    /* Set ul to a non-zero value using the debugger to step out of this
+       function. */
+    printf("%s %s: line=%lu\n", __func__, pcFile, ulLine);
+    while( ul == 0 ) {
+      portNOP();
+    }
+  }
+  taskEXIT_CRITICAL();
+}
+
+void vApplicationTickHook( void )
+{
+
+}
+
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName)
+{
+	
 }

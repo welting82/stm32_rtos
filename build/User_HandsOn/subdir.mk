@@ -8,9 +8,9 @@ User_HandsOn/%.o: ../User_HandsOn/%.c
 	arm-none-eabi-gcc \
 		-D STM32F429_439xx -D STM32F429xx -D __VFP_FP__ \
 		-I ../base \
-		-I ../User_HandsOn \
 		-I ../startup \
 		-I ../stm32f4xx_hal_driver/Inc \
+		-I ../rtos/Inc \
 		-O0 -ffunction-sections -fdata-sections \
 		-Wall -std=gnu99 -Wa,-adhlns="$@.lst" -c -fmessage-length=0 \
 		-MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -o "$@" "$<"

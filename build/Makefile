@@ -2,10 +2,11 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include stm32f4xx_hal_driver/Src/subdir.mk
+-include rtos/Src/subdir.mk
 -include startup/subdir.mk
 -include base/subdir.mk
 -include User_HandsOn/subdir.mk
--include stm32f4xx_hal_driver/Src/subdir.mk
 -include subdir.mk
 -include objects.mk
 
