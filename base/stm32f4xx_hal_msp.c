@@ -85,7 +85,7 @@ void HAL_PPP_MspDeInit(void)
 
 }
 
- void HAL_UART_MspInit(UART_HandleTypeDef *huart)
+void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
   if(huart->Instance == USART2)
   {
