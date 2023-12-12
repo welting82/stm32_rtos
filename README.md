@@ -2,7 +2,7 @@
 ## Build:
 1. $make
 
-## Flash:
+## St flash tool:
 1. Open STM32 ST-LINK Utility.exe
 2. Choose file to flash. 
     - "File -> Open File...", select main.hex
@@ -10,6 +10,9 @@
     - "Target -> Connect"
 4. Flash image to MCU.
     - "Target -> Program..."
+
+## St flash cmd:
+1.st-flash write .\build\main.bin 0x8000000
 
 ## Wire connect:
 | TTL pin | MCU pin |

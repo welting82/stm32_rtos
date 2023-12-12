@@ -3,8 +3,10 @@
 #include <stdio.h>
 #include "FreeRTOS.h"
 #include "task.h"
+#include "semphr.h"
 
-#define BLINK_TASK_PRIORITY		( tskIDLE_PRIORITY + 1UL )
+#define UART_H_TASK_PRIORITY		( tskIDLE_PRIORITY + 1UL )
+#define UART_CNT_TASK_PRIORITY		( tskIDLE_PRIORITY + 1UL )
 
 void UART2_Configuration(void);
 void Clock_Configuration(void);
@@ -13,10 +15,13 @@ void Delay_ms(volatile int time_ms);
 
 UART_HandleTypeDef huart2; /*Create UART_InitTypeDef struct instance */
 char RX_Buffer; //"Interrupt inputt"
-char rec_data[10]; //"receice data"
+char rec_data[100]; //"receice data"
 char TX_Buffer[50] = "Hello World\r\n";
+char tmp_Buffer[20] = "Loop Cnt: ";
 uint8_t Uart2_Rx_Cnt = 0;
 uint8_t loop_cnt = 0;
+
+xSemaphoreHandle xSemaphore;
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -162,28 +167,73 @@ void vApplicationIdleHook( void )
 
 static void Blink_Task(void* pvParameters)
 {
-    TickType_t xLastFlashTime;
-
-    xLastFlashTime = xTaskGetTickCount();
-
     while (1) {
         HAL_GPIO_TogglePin(GPIOG,GPIO_PIN_13);
-        vTaskDelayUntil(&xLastFlashTime, 500);
+        vTaskDelay(200);
         HAL_GPIO_TogglePin(GPIOG,GPIO_PIN_13);
-        vTaskDelayUntil(&xLastFlashTime, 1500);
+        vTaskDelay(200);
     }
 }
 
+static void calc_Task(void* pvParameters)
+{
+	int idx = 10;
+    while (1) {
+		if( xSemaphore != NULL )
+			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
+			{
+				if(loop_cnt > 99) loop_cnt = 0;
+				tmp_Buffer[idx] = loop_cnt/10 + 48;
+				tmp_Buffer[idx + 1] = loop_cnt%10 + 48;
+				tmp_Buffer[idx + 2] = '\r';
+				tmp_Buffer[idx + 3] = '\n';
+				tmp_Buffer[idx + 4] = '\0';
+				loop_cnt++;
+				xSemaphoreGive( xSemaphore );
+			}
+		vTaskDelay(500);
+    }
+}
+
+static void send_hello_world(void* pvParameters)
+{
+    while (1) {
+		if( xSemaphore != NULL )
+			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
+			{
+        		HAL_UART_Transmit(&huart2, (uint8_t*)&TX_Buffer, sizeof(TX_Buffer),50);
+				xSemaphoreGive( xSemaphore );
+			}
+        vTaskDelay(1000);
+    }
+}
+
+static void send_counting(void* pvParameters)
+{
+    while (1) {
+		if( xSemaphore != NULL )
+			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
+			{
+				HAL_UART_Transmit(&huart2, (uint8_t*)&tmp_Buffer, sizeof(tmp_Buffer),50);
+				xSemaphoreGive( xSemaphore );
+			}
+        vTaskDelay(500);
+    }
+}
 
 int main(void)
 {
+	int res = 0;
 	HAL_Init(); /* HAL library initialization */
 	Clock_Configuration();
 	UART2_Configuration(); /* Call UART2 initialization define below */
 	LED3_Configuration();
-	xTaskCreate(Blink_Task, "LED", configMINIMAL_STACK_SIZE, NULL,
-                BLINK_TASK_PRIORITY, NULL);
+	xSemaphore = xSemaphoreCreateMutex();
+	res = xTaskCreate(send_hello_world, "Send_hello_world.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
+	res = xTaskCreate(Blink_Task, "Blink_LED.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
 
+	res = xTaskCreate(send_counting, "Send_counting.", configMINIMAL_STACK_SIZE, NULL, UART_CNT_TASK_PRIORITY, NULL);
+	res = xTaskCreate(calc_Task, "calc_Task.", configMINIMAL_STACK_SIZE, NULL, UART_CNT_TASK_PRIORITY, NULL);
     vTaskStartScheduler();
 	while(1)
 	{
