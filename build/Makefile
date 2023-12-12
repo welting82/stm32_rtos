@@ -6,7 +6,7 @@ RM := rm -rf
 -include rtos/Src/subdir.mk
 -include startup/subdir.mk
 -include base/subdir.mk
--include User_HandsOn/subdir.mk
+-include User_HandsOn/Src/subdir.mk
 -include subdir.mk
 -include objects.mk
 

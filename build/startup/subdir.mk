@@ -8,7 +8,7 @@ startup/%.o: ../startup/%.S
 	arm-none-eabi-gcc -x assembler-with-cpp \
 		-D STM32F429_439xx -D STM32F429xx -D __VFP_FP__ \
 		-I ../base \
-		-I ../User_HandsOn \
+		-I ../User_HandsOn/Inc \
 		-I ../startup \
 		-I ../stm32f4xx_hal_driver/Inc \
 		-Wa,-adhlns="$@.lst" -c -fmessage-length=0 \

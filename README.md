@@ -2,6 +2,9 @@
 ## Build:
 1. $make
 
+## Flash:
+1. $make flash
+
 ## St flash tool:
 1. Open STM32 ST-LINK Utility.exe
 2. Choose file to flash. 
