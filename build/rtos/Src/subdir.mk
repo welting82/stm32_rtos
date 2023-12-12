@@ -5,7 +5,7 @@ C_SRCS += \
 # Each subdirectory must supply rules for building sources it contributes
 rtos/Src/%.o: ../rtos/Src/%.c
 	@echo 'Building file: $<'
-	arm-none-eabi-gcc \
+	arm-none-eabi-gcc -g \
 		-D STM32F429_439xx -D STM32F429xx -D __VFP_FP__ \
 		-I ../rtos/Inc \
 		-I ../stm32f4xx_hal_driver/Inc \

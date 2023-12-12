@@ -5,7 +5,7 @@ S_UPPER_SRCS += \
 # Each subdirectory must supply rules for building sources it contributes
 startup/%.o: ../startup/%.S
 	@echo 'Building file: $<'
-	arm-none-eabi-gcc -x assembler-with-cpp \
+	arm-none-eabi-gcc -x assembler-with-cpp -g \
 		-D STM32F429_439xx -D STM32F429xx -D __VFP_FP__ \
 		-I ../base \
 		-I ../User_HandsOn/Inc \

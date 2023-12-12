@@ -94,7 +94,7 @@ C_SRCS += \
 # Each subdirectory must supply rules for building sources it contributes
 stm32f4xx_hal_driver/Src/%.o: ../stm32f4xx_hal_driver/Src/%.c
 	@echo 'Building file: $<'
-	arm-none-eabi-gcc \
+	arm-none-eabi-gcc -g\
 		-D STM32F429_439xx -D STM32F429xx -D __VFP_FP__ \
 		-I ../base \
 		-I ../stm32f4xx_hal_driver/Inc \
