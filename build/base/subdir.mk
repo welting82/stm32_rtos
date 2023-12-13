@@ -1,9 +1,6 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-	../base/syscalls.c \
-	../base/stm32f4xx_hal_msp.c \
-	../base/stm32f4xx_it.c \
-	../base/system_stm32f4xx.c 
+	$(wildcard ../base/*.c)
 
 # Each subdirectory must supply rules for building sources it contributes
 base/%.o: ../base/%.c
