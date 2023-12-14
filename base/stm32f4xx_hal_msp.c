@@ -104,16 +104,24 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
   }
 }
 
-/**
-  * @}
-  */
+void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c1)
+{
+  if(hi2c1->Instance == I2C1)
+  {
+    __HAL_RCC_GPIOB_CLK_ENABLE(); /* Enable clock to PORTB - I2C1 pins PB6 and PB7 */
+    __HAL_RCC_I2C1_CLK_ENABLE(); /* Enable clock to I2C1 module */
 
-/**
-  * @}
-  */
+    GPIO_InitTypeDef  hi2c;
+    hi2c.Pin = GPIO_PIN_6 | GPIO_PIN_7;
+    hi2c.Mode = GPIO_MODE_AF_OD;
+    hi2c.Pull = GPIO_PULLUP;
+    hi2c.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    hi2c.Alternate = GPIO_AF4_I2C1;
+    HAL_GPIO_Init(GPIOB, &hi2c);
+    HAL_NVIC_SetPriority(I2C1_EV_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
+  }
+}
 
-/**
-  * @}
-  */
 
 
