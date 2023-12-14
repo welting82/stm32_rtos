@@ -6,8 +6,6 @@ xSemaphoreHandle xSemaphore;
 
 void Clock_Configuration(void)
 {
-    __HAL_RCC_USART2_CLK_ENABLE(); /* Enable clock to UART2 module */
-
     // PLL Configuration
     RCC_OscInitTypeDef RCC_OscInitStruct;
     RCC_ClkInitTypeDef RCC_ClkInitStruct;
