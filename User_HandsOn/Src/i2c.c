@@ -11,6 +11,7 @@ void I2C1_Configuration(void)
 	hi2c1.Init.OwnAddress1 = 0x00;
 	hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
 	HAL_I2C_Init(&hi2c1);
+    HAL_StatusTypeDef res = HAL_I2C_IsDeviceReady(&hi2c1,0x0,10,30);
 }
 
 
