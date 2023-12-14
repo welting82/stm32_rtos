@@ -1,12 +1,13 @@
 #include "base_init.h"
 #include "uart.h"
 #include "led.h"
-#include "i2c.h"
 
 xSemaphoreHandle xSemaphore;
 
 void Clock_Configuration(void)
 {
+    __HAL_RCC_USART2_CLK_ENABLE(); /* Enable clock to UART2 module */
+
     // PLL Configuration
     RCC_OscInitTypeDef RCC_OscInitStruct;
     RCC_ClkInitTypeDef RCC_ClkInitStruct;
@@ -34,9 +35,8 @@ void peripheral_init()
 {
     HAL_Init(); /* HAL library initialization */
 	Clock_Configuration();
+	UART2_Configuration(); /* Call UART2 initialization define below */
 	LED3_Configuration();
-	UART2_Configuration();
-    I2C1_Configuration();
     xSemaphore = xSemaphoreCreateMutex();
 }
 
