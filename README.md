@@ -1,4 +1,10 @@
 # STM32F429 RTOS Porting
+## Environment:
+1. USB driver: st-link (https://www.st.com/en/development-tools/stsw-link009.html)
+2. flash tool: st-link (https://www.st.com/en/development-tools/stsw-link007.html)
+3. cross-compiler: gcc-arm-none-eabi (https://developer.arm.com/downloads/-/gnu-rm)
+4. debug tool: openOCD (https://github.com/xpack-dev-tools/openocd-xpack/releases)
+
 ## Build:
 1. $make
 
