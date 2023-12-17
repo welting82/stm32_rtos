@@ -37,7 +37,7 @@ void peripheral_init()
 	LED3_Configuration();
 	UART2_Configuration();
     I2C1_Configuration();
-    I2C2_Configuration();
+    // I2C2_Configuration();
     xSemaphore = xSemaphoreCreateMutex();
 }
 

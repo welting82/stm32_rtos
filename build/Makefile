@@ -46,7 +46,7 @@ all: main.elf secondary-outputs
 # Tool invocations
 main.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	arm-none-eabi-gcc \
+	arm-none-eabi-gcc -g \
 		-T ../startup/STM32F429ZI_FLASH.ld \
 		-nostartfiles -Xlinker --gc-sections \
 		-Wl,-Map,main.map -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -o "main.elf" $(OBJS) $(USER_OBJS)

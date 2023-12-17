@@ -28,8 +28,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		rec_data[Uart2_Rx_Cnt] = '\r';
 		rec_data[Uart2_Rx_Cnt+1] = '\n';
 
-		HAL_UART_Transmit(&huart2, (uint8_t *)&rec_data, sizeof(rec_data),0xFFFF);
-		if(Uart2_Rx_Cnt == sizeof(rec_data)-2) HAL_UART_Transmit(&huart2, (uint8_t *)"overflow\r\n", 10,0xFFFF);
+		HAL_UART_Transmit(&huart2, (uint8_t *)&rec_data, sizeof(rec_data),HAL_MAX_DELAY);
+		if(Uart2_Rx_Cnt == sizeof(rec_data)-2) HAL_UART_Transmit(&huart2, (uint8_t *)"overflow\r\n", 10,HAL_MAX_DELAY);
 		memset(rec_data,0,sizeof(rec_data));
 		Uart2_Rx_Cnt = 0;
 	}
@@ -66,7 +66,7 @@ void send_hello_world(void* pvParameters)
 		if( xSemaphore != NULL )
 			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
 			{
-        		HAL_UART_Transmit(&huart2, (uint8_t*)&TX_Buffer, sizeof(TX_Buffer),50);
+        		HAL_UART_Transmit(&huart2, (uint8_t*)&TX_Buffer, sizeof(TX_Buffer),HAL_MAX_DELAY);
 				xSemaphoreGive( xSemaphore );
 			}
         vTaskDelay(1000);
@@ -79,9 +79,27 @@ void send_counting(void* pvParameters)
 		if( xSemaphore != NULL )
 			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
 			{
-				HAL_UART_Transmit(&huart2, (uint8_t*)&tmp_Buffer, sizeof(tmp_Buffer),50);
+				HAL_UART_Transmit(&huart2, (uint8_t*)&tmp_Buffer, sizeof(tmp_Buffer),HAL_MAX_DELAY);
 				xSemaphoreGive( xSemaphore );
 			}
         vTaskDelay(500);
     }
+}
+
+void output_data(uint8_t *buf, uint8_t len)
+{
+	memset(rec_data,0,sizeof(rec_data));
+	memcpy(rec_data,buf,len);
+	while( xSemaphore != NULL )
+	{
+		if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE && len > 0)
+		{
+			rec_data[len] = '\r';
+			rec_data[len+1] = '\n';
+			HAL_UART_Transmit(&huart2, (uint8_t*)&rec_data, len + 2,HAL_MAX_DELAY);
+			xSemaphoreGive( xSemaphore );
+		}
+		break;
+	}
+	return;
 }
