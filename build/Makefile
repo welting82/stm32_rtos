@@ -12,13 +12,13 @@ RM := rm -rf
 
 
 OBJS += \
-	$(C_SRCS:../%.c=%.o) $(S_UPPER_SRCS:../%.S=%.o)
+	$(C_SRCS:../%.c=%.o) $(S_UPPER_SRCS:../%.s=%.o)
 
 C_DEPS += \
 	$(C_SRCS:../%.c=%.d)
 
 S_UPPER_DEPS += \
-	$(S_UPPER_SRCS:../%.S=%.d)
+	$(S_UPPER_SRCS:../%.s=%.d)
 
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(strip $(C_DEPS)),)

@@ -34,9 +34,8 @@ void i2c_main(void)
     uint8_t data[3] = {0x30,0x31,0x32};
 
     res = HAL_I2C_Master_Transmit(&hi2c1, AXDL345_ADDR, (uint8_t *)&data, 1,HAL_MAX_DELAY);
-    output_data(&data,3);
     res = HAL_I2C_Master_Receive(&hi2c1, AXDL345_ADDR, (uint8_t *)&data, 10,HAL_MAX_DELAY);
-    output_data(&data,3);
+	debug_print("res = 0x%x",res);
     return;
 }
 

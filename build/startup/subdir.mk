@@ -1,9 +1,9 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 S_UPPER_SRCS += \
-	../startup/startup_stm32f429_439xx.S
+	../startup/startup_stm32f429_439xx.s
 
 # Each subdirectory must supply rules for building sources it contributes
-startup/%.o: ../startup/%.S
+startup/%.o: ../startup/%.s
 	@echo 'Building file: $<'
 	arm-none-eabi-gcc -x assembler-with-cpp -g \
 		-D STM32F429_439xx -D STM32F429xx -D __VFP_FP__ \

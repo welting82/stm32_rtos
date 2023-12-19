@@ -48,3 +48,11 @@ void Delay_ms(volatile int time_ms)
   for(j = 0; j < time_ms*4000; j++)
     {}  /* excute NOP for 1ms */
 }
+
+void debug_print(const char * format, ... )
+{
+	va_list argList;
+	va_start(argList, format);
+	outputError(1, format, argList);
+	va_end(argList);
+}

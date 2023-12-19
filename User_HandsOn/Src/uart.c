@@ -103,3 +103,52 @@ void output_data(uint8_t *buf, uint8_t len)
 	}
 	return;
 }
+
+void outputError(uint8_t CRLF, const char *format, va_list ap)
+{
+	#define BUF_SIZE 100
+	char buf[BUF_SIZE];
+	int32_t nb;
+
+	while( xSemaphore != NULL )
+	{
+		if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE)
+		{
+			nb = (int32_t)vsnprintf(buf, BUF_SIZE, format, ap);
+			if (nb > 0)
+			{
+				uint32_t nb_size = (uint32_t)nb;
+				if(CRLF == 1U)
+				{
+					if (nb >= 2 && ((buf[nb-2] == '\r' && buf[nb-1] == '\n') || (buf[nb-2] == '\n' && buf[nb-1] == '\r')))
+					{
+						// Check if the string ends with "\r\n" or "\n\r"
+						// Do nothing since \r\n already within the ends of buffer
+					}
+					else
+					{
+						// Append "\r\n" to the end of the buffer
+						if (nb < BUF_SIZE - 2)
+						{
+							buf[nb] = '\r';
+							buf[nb+1] = '\n';
+							buf[nb+2] = '\0';
+							nb_size+=2U;
+						}
+						else
+						{
+							// Buffer is not large enough to append "\r\n"
+							// Truncate the message to fit in the buffer
+							buf[BUF_SIZE-3] = '\r';
+							buf[BUF_SIZE-2] = '\n';
+							buf[BUF_SIZE-1] = '\0';
+							nb_size= (uint32_t)(BUF_SIZE-1);
+						}
+					}
+				}
+				HAL_UART_Transmit(&huart2, (uint8_t*)&buf, nb_size,HAL_MAX_DELAY);
+			}
+		}
+		break;
+	}
+}
