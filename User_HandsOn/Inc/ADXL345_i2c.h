@@ -78,6 +78,9 @@ extern I2C_HandleTypeDef  hi2c1;
 // modes
 #define MeasurementMode     0x08
 
+#define DisableLowPowerMode 0x00
+#define EnableLowPowerMode  0x01
+
 
 // Functions
 /**
@@ -486,7 +489,7 @@ char ADXL345_I2C_SingleByteRead(char address);
  - address of the register to write to.
 - the value of the data to store
 */
-int ADXL345_I2C_SingleByteWrite(char address, char data);
+HAL_StatusTypeDef ADXL345_I2C_SingleByteWrite(char address, char data);
 
 /**
  * Read several consecutive bytes on the device and store them in a given location.
@@ -495,7 +498,7 @@ int ADXL345_I2C_SingleByteWrite(char address, char data);
  * @param ptr_output: a pointer to the location to store the data being read
  * @param size: The number of bytes to read.
  */
-void ADXL345_I2C_multiByteRead(char startAddress, char* ptr_output, int size);
+void ADXL345_I2C_multiByteRead(char startAddress, char* ptr_output, uint8_t size);
 
 /**
  * Write several consecutive bytes  on the device.
@@ -504,6 +507,6 @@ void ADXL345_I2C_multiByteRead(char startAddress, char* ptr_output, int size);
  * @param ptr_data: Pointer to a location which contains the data to write.
  * @param size: The number of bytes to write.
  */
-int ADXL345_I2C_multiByteWrite(char startAddress, char* ptr_data, int size);
+HAL_StatusTypeDef ADXL345_I2C_multiByteWrite(char startAddress, char* ptr_data, uint8_t size);
 
 #endif /* ADXL345_I2C_H */

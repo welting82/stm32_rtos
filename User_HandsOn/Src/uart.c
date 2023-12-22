@@ -43,8 +43,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 void calc_Task(void* pvParameters)
 {
 	int idx = 10;
-    while (1) {
+	while (1)
+	{
 		if( xSemaphore != NULL )
+		{
 			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
 			{
 				if(loop_cnt > 99) loop_cnt = 0;
@@ -56,34 +58,41 @@ void calc_Task(void* pvParameters)
 				loop_cnt++;
 				xSemaphoreGive( xSemaphore );
 			}
+		}
 		vTaskDelay(500);
-    }
+	}
 }
 
 void send_hello_world(void* pvParameters)
 {
-    while (1) {
+	while (1)
+	{
 		if( xSemaphore != NULL )
+		{
 			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
 			{
-        		HAL_UART_Transmit(&huart2, (uint8_t*)&TX_Buffer, sizeof(TX_Buffer),HAL_MAX_DELAY);
+				HAL_UART_Transmit(&huart2, (uint8_t*)&TX_Buffer, sizeof(TX_Buffer),HAL_MAX_DELAY);
 				xSemaphoreGive( xSemaphore );
 			}
-        vTaskDelay(1000);
-    }
+		}
+		vTaskDelay(1000);
+	}
 }
 
 void send_counting(void* pvParameters)
 {
-    while (1) {
+	while (1)
+	{
 		if( xSemaphore != NULL )
+		{
 			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
 			{
 				HAL_UART_Transmit(&huart2, (uint8_t*)&tmp_Buffer, sizeof(tmp_Buffer),HAL_MAX_DELAY);
 				xSemaphoreGive( xSemaphore );
 			}
-        vTaskDelay(500);
-    }
+		}
+		vTaskDelay(500);
+	}
 }
 
 void output_data(uint8_t *buf, uint8_t len)
@@ -148,6 +157,7 @@ void outputError(uint8_t CRLF, const char *format, va_list ap)
 				}
 				HAL_UART_Transmit(&huart2, (uint8_t*)&buf, nb_size,HAL_MAX_DELAY);
 			}
+			xSemaphoreGive( xSemaphore );
 		}
 		break;
 	}
