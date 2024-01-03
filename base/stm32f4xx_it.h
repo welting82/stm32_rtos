@@ -60,6 +60,7 @@ void DebugMon_Handler(void);
 __weak void PendSV_Handler(void);
 __weak void SysTick_Handler(void);
 void USART2_IRQHandler(void);
+void I2C1_EV_IRQHandler(void);
 
 #ifdef __cplusplus
 }

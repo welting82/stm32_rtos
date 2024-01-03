@@ -40,6 +40,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_it.h"
 extern UART_HandleTypeDef huart2;
+extern I2C_HandleTypeDef  hi2c1;;
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
   */
@@ -180,13 +181,7 @@ void USART2_IRQHandler(void)
   HAL_UART_IRQHandler(&huart2);
 }
 
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */ 
-
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+void I2C1_EV_IRQHandler(void)
+{
+  HAL_I2C_EV_IRQHandler(&hi2c1);
+}

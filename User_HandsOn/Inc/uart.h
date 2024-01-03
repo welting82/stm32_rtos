@@ -7,5 +7,6 @@ void UART2_Configuration(void);
 void calc_Task(void* pvParameters);
 void send_hello_world(void* pvParameters);
 void send_counting(void* pvParameters);
+void Show_stack_usage(void* pvParameters);
 
 #endif /* UART_H */
