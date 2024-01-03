@@ -1,6 +1,7 @@
 #include "uart.h"
 
 extern xSemaphoreHandle xSemaphore;
+xTaskHandle pvCreatedTaskShow_stack_usage;
 UART_HandleTypeDef huart2; /*Create UART_InitTypeDef struct instance */
 char RX_Buffer; //"Interrupt inputt"
 char rec_data[100]; //"receice data"
@@ -38,6 +39,26 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		rec_data[Uart2_Rx_Cnt++] = RX_Buffer;
 	}
 	HAL_UART_Receive_IT(huart, (uint8_t*)&RX_Buffer, 1);
+}
+
+PUTCHAR_PROTOTYPE
+{
+	HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+	return ch;
+}
+
+GETCHAR_PROTOTYPE
+{
+  uint8_t ch = 0;
+
+  /* Clear the Overrun flag just before receiving the first character */
+  __HAL_UART_CLEAR_OREFLAG(&huart2);
+
+  /* Wait for reception of a character on the USART RX line and echo this
+   * character on console */
+  HAL_UART_Receive(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+  return ch;
 }
 
 void calc_Task(void* pvParameters)
@@ -95,70 +116,20 @@ void send_counting(void* pvParameters)
 	}
 }
 
-void output_data(uint8_t *buf, uint8_t len)
+void Show_stack_usage(void* pvParameters)
 {
-	memset(rec_data,0,sizeof(rec_data));
-	memcpy(rec_data,buf,len);
-	while( xSemaphore != NULL )
-	{
-		if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE && len > 0)
-		{
-			rec_data[len] = '\r';
-			rec_data[len+1] = '\n';
-			HAL_UART_Transmit(&huart2, (uint8_t*)&rec_data, len + 2,HAL_MAX_DELAY);
-			xSemaphoreGive( xSemaphore );
-		}
-		break;
-	}
-	return;
-}
+	unsigned portBASE_TYPE uxHighWaterMark;
 
-void outputError(uint8_t CRLF, const char *format, va_list ap)
-{
-	#define BUF_SIZE 100
-	char buf[BUF_SIZE];
-	int32_t nb;
-
-	while( xSemaphore != NULL )
-	{
-		if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE)
+    while (1) {
+		if( xSemaphore != NULL )
 		{
-			nb = (int32_t)vsnprintf(buf, BUF_SIZE, format, ap);
-			if (nb > 0)
+			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
 			{
-				uint32_t nb_size = (uint32_t)nb;
-				if(CRLF == 1U)
-				{
-					if (nb >= 2 && ((buf[nb-2] == '\r' && buf[nb-1] == '\n') || (buf[nb-2] == '\n' && buf[nb-1] == '\r')))
-					{
-						// Check if the string ends with "\r\n" or "\n\r"
-						// Do nothing since \r\n already within the ends of buffer
-					}
-					else
-					{
-						// Append "\r\n" to the end of the buffer
-						if (nb < BUF_SIZE - 2)
-						{
-							buf[nb] = '\r';
-							buf[nb+1] = '\n';
-							buf[nb+2] = '\0';
-							nb_size+=2U;
-						}
-						else
-						{
-							// Buffer is not large enough to append "\r\n"
-							// Truncate the message to fit in the buffer
-							buf[BUF_SIZE-3] = '\r';
-							buf[BUF_SIZE-2] = '\n';
-							buf[BUF_SIZE-1] = '\0';
-							nb_size= (uint32_t)(BUF_SIZE-1);
-						}
-					}
-				}
-				HAL_UART_Transmit(&huart2, (uint8_t*)&buf, nb_size,HAL_MAX_DELAY);
+				uxHighWaterMark=uxTaskGetStackHighWaterMark(pvCreatedTaskShow_stack_usage);
+				printf("Stack size left(word): %d\r\n",uxHighWaterMark);
+				xSemaphoreGive( xSemaphore );
 			}
-			xSemaphoreGive( xSemaphore );
 		}
-		break;
+			vTaskDelay(5000);
 	}
 }

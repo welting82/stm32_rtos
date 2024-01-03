@@ -12,15 +12,26 @@
  * Includes
  */
 #include "ADXL345_i2c.h"
+HAL_StatusTypeDef i2c_res;
 
 void ADXL345_I2C_init(void)
 {
+    if(HAL_I2C_IsDeviceReady(&hi2c1,ADXL345_I2C_READ,1,3) != HAL_OK)
+    {
+        printf("i2c NG!\r\n");
+        return;
+    }
+    else
+    {
+        printf("i2c ok!\r\n");
+    }
+
     // initialize the BW data rate
     //frequence greater than or equal to 0x0A is written into the rate bits (Bit D3 through Bit D0) in the BW_RATE register
     ADXL345_I2C_setDataRate(ADXL345_1600HZ);
 
     //Data format (for +-16g) - This is done by setting Bit D3 of the DATA_FORMAT register (Address 0x31) and writing a value of 0x03 to the range bits (Bit D1 and Bit D0) of the DATA_FORMAT register (Address 0x31).
-    ADXL345_I2C_SingleByteWrite(ADXL345_DATA_FORMAT_REG,0x0B);
+    ADXL345_I2C_SingleByteWrite(ADXL345_DATA_FORMAT_REG,0x0F);
  
     // Set Offset  - programmed into the OFSX, OFSY, and OFXZ registers, respectively, as 0xFD, 0x03 and 0xFE.
     // ADXL345_I2C_SingleByteWrite(ADXL345_OFSX_REG,0xFD);
@@ -28,8 +39,10 @@ void ADXL345_I2C_init(void)
     // ADXL345_I2C_SingleByteWrite(ADXL345_OFSZ_REG,0xFE);
 
     uint8_t reg =  ADXL345_I2C_getPowerControl();
-    reg = reg || (1<<3);
-    ADXL345_I2C_SingleByteWrite(ADXL345_POWER_CTL_REG,reg);
+    reg = reg | (1<<3);
+    i2c_res = HAL_ERROR;
+    i2c_res = ADXL345_I2C_SingleByteWrite(ADXL345_POWER_CTL_REG,reg);
+
     return;
 }
 
@@ -37,9 +50,9 @@ char ADXL345_I2C_SingleByteRead(char address)
 {
    char tx = address;
    char output;
-   HAL_StatusTypeDef res = HAL_OK;
-   res = HAL_I2C_Master_Transmit(&hi2c1, ADXL345_I2C_WRITE, (uint8_t *)&tx, sizeof(tx),HAL_MAX_DELAY);
-   res = HAL_I2C_Master_Receive(&hi2c1, ADXL345_I2C_READ, (uint8_t *)&output, sizeof(output),HAL_MAX_DELAY);
+   i2c_res = HAL_ERROR;
+   i2c_res = HAL_I2C_Master_Transmit(&hi2c1, ADXL345_I2C_WRITE, (uint8_t *)&tx, sizeof(tx),HAL_MAX_DELAY);
+   i2c_res = HAL_I2C_Master_Receive(&hi2c1, ADXL345_I2C_READ, (uint8_t *)&output, sizeof(output),HAL_MAX_DELAY);
     return output;
 }
 
@@ -59,10 +72,11 @@ HAL_StatusTypeDef ADXL345_I2C_SingleByteWrite(char address, char data)
 
 
 
-void ADXL345_I2C_multiByteRead(char address, char* output, uint8_t size)
+void ADXL345_I2C_multiByteRead(char address, uint8_t* output, uint8_t size)
 {
     // HAL_I2C_Master_Transmit(&hi2c1, ADXL345_I2C_WRITE, address, 1,HAL_MAX_DELAY);
-    HAL_I2C_Mem_Read(&hi2c1,ADXL345_I2C_READ, address, I2C_MEMADD_SIZE_8BIT, (uint8_t *)output, size, HAL_MAX_DELAY);
+    i2c_res = HAL_ERROR;
+    i2c_res = HAL_I2C_Mem_Read(&hi2c1,ADXL345_I2C_READ, address, I2C_MEMADD_SIZE_8BIT, (uint8_t *)output, size, HAL_MAX_DELAY);
     return;
 }
 
@@ -74,19 +88,21 @@ HAL_StatusTypeDef ADXL345_I2C_multiByteWrite(char address, char* ptr_data, uint8
 }
 
 
-void ADXL345_I2C_getOutput(int* readings)
+void ADXL345_I2C_getOutput(float* readings)
 {
-    char buffer[6];
+    uint8_t buffer[6];
     ADXL345_I2C_multiByteRead(ADXL345_DATAX0_REG, buffer, 6);
-    
-    readings[0] = (int)buffer[1] << 8 | (int)buffer[0];
-    readings[1] = (int)buffer[3] << 8 | (int)buffer[2];
-    readings[2] = (int)buffer[5] << 8 | (int)buffer[4];
+    readings[0] = (float)((short)(buffer[1] << 8 | buffer[0])*0.004);
+    readings[1] = (float)((short)(buffer[3] << 8 | buffer[2])*0.004);
+    readings[2] = (float)((short)(buffer[5] << 8 | buffer[4])*0.004);
 }
 
 char ADXL345_I2C_getDeviceID()
 {  
-    return ADXL345_I2C_SingleByteRead(ADXL345_DEVID_REG);
+    uint8_t res = 0;
+    ADXL345_I2C_multiByteRead(ADXL345_DEVID_REG,&res,1);
+    return res;
+    // return ADXL345_I2C_SingleByteRead(ADXL345_DEVID_REG);
 }
 
 int ADXL345_I2C_setPowerMode(char mode)

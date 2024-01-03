@@ -1,4 +1,5 @@
 #include "i2c.h"
+// #include <stdio.h>
 
 I2C_HandleTypeDef  hi2c1;
 I2C_HandleTypeDef  hi2c2;
@@ -14,7 +15,6 @@ void I2C1_Configuration(void) // for AXDL345
 	hi2c1.Init.OwnAddress1 = 0x00;
 	hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
 	HAL_I2C_Init(&hi2c1);
-    // res = HAL_I2C_IsDeviceReady(&hi2c1,0xE5,1,3);
 }
 
 void I2C2_Configuration(void)  // for L3GD20
@@ -26,22 +26,20 @@ void I2C2_Configuration(void)  // for L3GD20
 	hi2c2.Init.OwnAddress1 = 0x00;
 	hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
 	HAL_I2C_Init(&hi2c2);
-    // res = HAL_I2C_IsDeviceReady(&hi2c2,0xAA,10,30);
 }
 
 void AXDL345_main(void* pvParameters)
 {
-    int data[3] = {0};
+	float data[3] = {0};
+	ADXL345_I2C_init();
 	while (1)
 	{
 		if( xSemaphore != NULL )
 		{
 			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
 			{
-				ADXL345_I2C_getOutput(data);
-				debug_print("====%x",data);
-				// HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_1);  //pull for L3GD20 CS pin;
-				debug_print("X = %f, Y = %f, Z = %f",data[0]*0.004,data[1]*0.004,data[2]*0.004);
+				ADXL345_I2C_getOutput(&data[0]);
+				printf("X = %f, Y = %f, Z = %f\r\n",data[0],data[1],data[2]);
 				xSemaphoreGive( xSemaphore );
 			}
 		}

@@ -1,5 +1,6 @@
 #include "main.h"
 
+extern xTaskHandle pvCreatedTaskShow_stack_usage;
 void vAssertCalled( const char * pcFile, unsigned long ulLine )
 {
   volatile unsigned long ul = 0;
@@ -12,7 +13,7 @@ void vAssertCalled( const char * pcFile, unsigned long ulLine )
   {
     /* Set ul to a non-zero value using the debugger to step out of this
        function. */
-    debug_print("%s %s: line=%lu\n", __func__, pcFile, ulLine);
+    printf("%s %s: line=%lu\n", __func__, pcFile, ulLine);
     while( ul == 0 ) {
       portNOP();
     }
@@ -66,19 +67,17 @@ void vApplicationIdleHook( void )
 	memory allocated by the kernel to any task that has since been deleted. */
 }
 
-
-
 int main(void)
 {
 	int res = 0;
 	peripheral_init();
-	ADXL345_I2C_init();
-	res = xTaskCreate(send_hello_world, "Send_hello_world.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
+	// res = xTaskCreate(send_hello_world, "Send_hello_world.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
 	res = xTaskCreate(AXDL345_main, "AXDL345_main.", configMINIMAL_STACK_SIZE, NULL, I2C_TASK_PRIORITY, NULL);
 	res = xTaskCreate(Blink_Task, "Blink_LED.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
 
-	res = xTaskCreate(send_counting, "Send_counting.", configMINIMAL_STACK_SIZE, NULL, UART_CNT_TASK_PRIORITY, NULL);
-	res = xTaskCreate(calc_Task, "calc_Task.", configMINIMAL_STACK_SIZE, NULL, UART_CNT_TASK_PRIORITY, NULL);
+	xTaskCreate(Show_stack_usage, "Show_stack_usage", configMINIMAL_STACK_SIZE, NULL,STACK_USAGE_TASK_PRIORITY, &pvCreatedTaskShow_stack_usage);
+	// res = xTaskCreate(send_counting, "Send_counting.", configMINIMAL_STACK_SIZE, NULL, UART_CNT_TASK_PRIORITY, NULL);
+	// res = xTaskCreate(calc_Task, "calc_Task.", configMINIMAL_STACK_SIZE, NULL, UART_CNT_TASK_PRIORITY, NULL);
     vTaskStartScheduler();
 	while(1)
 	{
