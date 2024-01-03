@@ -11,6 +11,7 @@ startup/%.o: ../startup/%.s
 		-I ../User_HandsOn/Inc \
 		-I ../startup \
 		-I ../stm32f4xx_hal_driver/Inc \
+		--specs=nano.specs -u _printf_float \
 		-Wa,-adhlns="$@.lst" -c -fmessage-length=0 \
 		-MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" \
 		-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -o "$@" "$<"

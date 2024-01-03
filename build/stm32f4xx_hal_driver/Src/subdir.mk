@@ -100,6 +100,7 @@ stm32f4xx_hal_driver/Src/%.o: ../stm32f4xx_hal_driver/Src/%.c
 		-I ../stm32f4xx_hal_driver/Inc \
 		-O0 \
 		-ffunction-sections -fdata-sections \
+		--specs=nano.specs -u _printf_float \
 		-Wall -std=gnu99 -Wa,-adhlns="$@.lst" -c \
 		-fmessage-length=0 \
 		-MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" \

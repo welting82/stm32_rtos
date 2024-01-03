@@ -14,6 +14,7 @@ base/%.o: ../base/%.c
 		-O0 \
 		-ffunction-sections -fdata-sections \
 		-Wall -std=gnu99 \
+		--specs=nano.specs -u _printf_float \
 		-Wa,-adhlns="$@.lst" \
 		-c \
 		-fmessage-length=0 \
