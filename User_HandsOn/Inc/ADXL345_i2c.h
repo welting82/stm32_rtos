@@ -62,12 +62,12 @@ extern I2C_HandleTypeDef  hi2c1;
 #define ADXL345_6HZ25       0x06
 
 // read or write bytes
-#define ADXL345_I2C_READ    0xA7  
-#define ADXL345_I2C_WRITE   0xA6 
+#define ADXL345_I2C_READ    0xA7
+#define ADXL345_I2C_WRITE   0xA6
 #define ADXL345_I2C_ADDRESS 0x53   //the ADXL345 7-bit address is 0x53 when ALT ADDRESS is low as it is on the sparkfun chip: when ALT ADDRESS is high the address is 0x1D
 
 /////////////when ALT ADDRESS pin is high:
-//#define ADXL345_I2C_READ    0x3B   
+//#define ADXL345_I2C_READ    0x3B
 //#define ADXL345_I2C_WRITE   0x3A
 //#define ADXL345_I2C_ADDRESS 0x1D 
 
@@ -95,7 +95,7 @@ void ADXL345_I2C_init(void);
  * @param Pointer to a buffer to hold the accelerometer value for the
  *        x-axis, y-axis and z-axis [in that order].
  */
-void ADXL345_I2C_getOutput(int* readings);
+void ADXL345_I2C_getOutput(float* readings);
 
 /**
  * Read the device ID register on the device.
@@ -498,7 +498,7 @@ HAL_StatusTypeDef ADXL345_I2C_SingleByteWrite(char address, char data);
  * @param ptr_output: a pointer to the location to store the data being read
  * @param size: The number of bytes to read.
  */
-void ADXL345_I2C_multiByteRead(char startAddress, char* ptr_output, uint8_t size);
+void ADXL345_I2C_multiByteRead(char startAddress, uint8_t* ptr_output, uint8_t size);
 
 /**
  * Write several consecutive bytes  on the device.
