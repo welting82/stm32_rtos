@@ -33,10 +33,10 @@ void ADXL345_I2C_init(void)
     //Data format (for +-16g) - This is done by setting Bit D3 of the DATA_FORMAT register (Address 0x31) and writing a value of 0x03 to the range bits (Bit D1 and Bit D0) of the DATA_FORMAT register (Address 0x31).
     ADXL345_I2C_SingleByteWrite(ADXL345_DATA_FORMAT_REG,0x0F);
  
-    // Set Offset  - programmed into the OFSX, OFSY, and OFXZ registers, respectively, as 0xFD, 0x03 and 0xFE.
-    // ADXL345_I2C_SingleByteWrite(ADXL345_OFSX_REG,0xFD);
-    // ADXL345_I2C_SingleByteWrite(ADXL345_OFSY_REG,0x03);
-    // ADXL345_I2C_SingleByteWrite(ADXL345_OFSZ_REG,0xFE);
+    // Set Offset  - programmed into the OFSX, OFSY, and OFXZ registers, calibration by hand......(find the zero point and balance)
+    ADXL345_I2C_SingleByteWrite(ADXL345_OFSX_REG,0x00);
+    ADXL345_I2C_SingleByteWrite(ADXL345_OFSY_REG,0x05);
+    ADXL345_I2C_SingleByteWrite(ADXL345_OFSZ_REG,0xFD);
 
     uint8_t reg =  ADXL345_I2C_getPowerControl();
     reg = reg | (1<<3);
@@ -92,9 +92,9 @@ void ADXL345_I2C_getOutput(float* readings)
 {
     uint8_t buffer[6];
     ADXL345_I2C_multiByteRead(ADXL345_DATAX0_REG, buffer, 6);
-    readings[0] = (float)((short)(buffer[1] << 8 | buffer[0])*0.004);
-    readings[1] = (float)((short)(buffer[3] << 8 | buffer[2])*0.004);
-    readings[2] = (float)((short)(buffer[5] << 8 | buffer[4])*0.004);
+    readings[0] = (float)((short)(buffer[1] << 8 | buffer[0])*0.0048);//4.8mg/LSB is result tring by hand.....
+    readings[1] = (float)((short)(buffer[3] << 8 | buffer[2])*0.0048);//4.8mg/LSB is result tring by hand.....
+    readings[2] = (float)((short)(buffer[5] << 8 | buffer[4])*0.0048);//4.8mg/LSB is result tring by hand.....
 }
 
 char ADXL345_I2C_getDeviceID()
