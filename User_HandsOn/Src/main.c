@@ -72,9 +72,7 @@ int main(void)
 {
 	int res = 0;
 	peripheral_init();
-	ADXL345_I2C_init();
 	res = xTaskCreate(send_hello_world, "Send_hello_world.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
-	res = xTaskCreate(AXDL345_main, "AXDL345_main.", configMINIMAL_STACK_SIZE, NULL, I2C_TASK_PRIORITY, NULL);
 	res = xTaskCreate(Blink_Task, "Blink_LED.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
 
 	res = xTaskCreate(send_counting, "Send_counting.", configMINIMAL_STACK_SIZE, NULL, UART_CNT_TASK_PRIORITY, NULL);

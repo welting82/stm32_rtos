@@ -1,7 +1,6 @@
 #include "base_init.h"
 #include "uart.h"
 #include "led.h"
-#include "i2c.h"
 
 xSemaphoreHandle xSemaphore;
 
@@ -36,8 +35,6 @@ void peripheral_init()
 	Clock_Configuration();
 	LED3_Configuration();
 	UART2_Configuration();
-    I2C1_Configuration();
-    // I2C2_Configuration();
     xSemaphore = xSemaphoreCreateMutex();
 }
 

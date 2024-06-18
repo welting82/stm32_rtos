@@ -4,7 +4,7 @@ extern xSemaphoreHandle xSemaphore;
 UART_HandleTypeDef huart2; /*Create UART_InitTypeDef struct instance */
 char RX_Buffer; //"Interrupt inputt"
 char rec_data[100]; //"receice data"
-char TX_Buffer[50] = "Hello World\r\n";
+char TX_Buffer[50] = "Hello World!!!\r\n";
 char tmp_Buffer[20] = "Loop Cnt: ";
 uint8_t Uart2_Rx_Cnt = 0;
 uint8_t loop_cnt = 0;

@@ -104,46 +104,5 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
   }
 }
 
-void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
-{
-  if(hi2c->Instance == I2C1)
-  {
-    __HAL_RCC_GPIOB_CLK_ENABLE(); /* Enable clock to PORTB - I2C1 pins PB6 and PB7 */
-    __HAL_RCC_I2C1_CLK_ENABLE(); /* Enable clock to I2C1 module */
-
-    GPIO_InitTypeDef  hi2c;
-    hi2c.Pin = GPIO_PIN_6 | GPIO_PIN_7;
-    hi2c.Mode = GPIO_MODE_AF_OD;
-    hi2c.Pull = GPIO_PULLUP;
-    hi2c.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    hi2c.Alternate = GPIO_AF4_I2C1;
-    HAL_GPIO_Init(GPIOB, &hi2c);
-    HAL_NVIC_SetPriority(I2C1_EV_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
-  }
-
-  if(hi2c->Instance == I2C2)
-  {
-    __HAL_RCC_GPIOF_CLK_ENABLE(); /* Enable clock to PORTF - I2C2 pins PF7 and PF9 */
-    __HAL_RCC_I2C2_CLK_ENABLE(); /* Enable clock to I2C2 module */
-
-    GPIO_InitTypeDef  hi2c;
-    hi2c.Pin = GPIO_PIN_7 | GPIO_PIN_9;
-    hi2c.Mode = GPIO_MODE_AF_OD;
-    hi2c.Pull = GPIO_PULLUP;
-    hi2c.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    hi2c.Alternate = GPIO_AF4_I2C2;
-    HAL_GPIO_Init(GPIOF, &hi2c);
-    HAL_NVIC_SetPriority(I2C2_EV_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(I2C2_EV_IRQn);
-
-    GPIO_InitTypeDef cs_pin; // pull high CS pin for enable L3GD20 i2c interface
-    cs_pin.Pin = GPIO_PIN_1;
-    cs_pin.Mode = GPIO_MODE_OUTPUT_PP;
-    cs_pin.Pull = GPIO_PULLUP;
-    HAL_GPIO_Init(GPIOC, &cs_pin);
-  }
-}
-
 
 
