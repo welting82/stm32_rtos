@@ -24,21 +24,11 @@
 1.st-flash write .\build\main.bin 0x8000000
 
 ## Wire connect:
-`UART`
 | TTL pin | MCU pin |
 |---------|---------|
 |   RX    |   PD5   |
 |   TX    |   PD6   |
 |   GND   |   GND   |
-
-`IMU(AXDL345) I2C`
-| IMU pin | MCU pin |
-|---------|---------|
-|   VCC   |   5V    |
-|   SDA   |   PB7   |
-|   SCL   |   PB6   |
-|   GND   |   GND   |
-
 
 ## Uart protocol:
 - Bard rate: 921600
