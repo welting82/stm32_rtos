@@ -13,6 +13,7 @@
  */
 #include "ADXL345_i2c.h"
 HAL_StatusTypeDef i2c_res;
+const float scale = 1.0/256; // 1g/LSB
 
 void ADXL345_I2C_init(void)
 {
@@ -92,9 +93,9 @@ void ADXL345_I2C_getOutput(float* readings)
 {
     uint8_t buffer[6];
     ADXL345_I2C_multiByteRead(ADXL345_DATAX0_REG, buffer, 6);
-    readings[0] = (float)((short)(buffer[1] << 8 | buffer[0])*0.0048);//4.8mg/LSB is result tring by hand.....
-    readings[1] = (float)((short)(buffer[3] << 8 | buffer[2])*0.0048);//4.8mg/LSB is result tring by hand.....
-    readings[2] = (float)((short)(buffer[5] << 8 | buffer[4])*0.0048);//4.8mg/LSB is result tring by hand.....
+    readings[0] = (((short)(buffer[1] << 8 | buffer[0])) >> 3) * scale;  //Scale for convert from LSB to g.
+    readings[1] = (((short)(buffer[3] << 8 | buffer[2])) >> 3) * scale;  //Scale for convert from LSB to g.
+    readings[2] = (((short)(buffer[5] << 8 | buffer[4])) >> 3) * scale;  //Scale for convert from LSB to g.
 }
 
 char ADXL345_I2C_getDeviceID()

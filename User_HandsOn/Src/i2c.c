@@ -39,11 +39,11 @@ void AXDL345_main(void* pvParameters)
 			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
 			{
 				ADXL345_I2C_getOutput(&data[0]);
-				printf("X = %f, Y = %f, Z = %f\r\n",data[0],data[1],data[2]);
+				printf("X = %6.3f(g), Y = %6.3f(g), Z = %6.3f(g)\r\n",data[0],data[1],data[2]);
 				xSemaphoreGive( xSemaphore );
 			}
 		}
-		vTaskDelay(500);
+		vTaskDelay(100);
 	}
 }
 

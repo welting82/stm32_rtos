@@ -71,13 +71,10 @@ int main(void)
 {
 	int res = 0;
 	peripheral_init();
-	// res = xTaskCreate(send_hello_world, "Send_hello_world.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
 	res = xTaskCreate(AXDL345_main, "AXDL345_main.", configMINIMAL_STACK_SIZE, NULL, I2C_TASK_PRIORITY, NULL);
 	res = xTaskCreate(Blink_Task, "Blink_LED.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
 
 	xTaskCreate(Show_stack_usage, "Show_stack_usage", configMINIMAL_STACK_SIZE, NULL,STACK_USAGE_TASK_PRIORITY, &pvCreatedTaskShow_stack_usage);
-	// res = xTaskCreate(send_counting, "Send_counting.", configMINIMAL_STACK_SIZE, NULL, UART_CNT_TASK_PRIORITY, NULL);
-	// res = xTaskCreate(calc_Task, "calc_Task.", configMINIMAL_STACK_SIZE, NULL, UART_CNT_TASK_PRIORITY, NULL);
     vTaskStartScheduler();
 	while(1)
 	{

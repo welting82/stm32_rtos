@@ -11,7 +11,7 @@
 ## Flash:
 1. $make flash
 
-## St flash tool:
+## ST flash tool:
 1. Open STM32 ST-LINK Utility.exe
 2. Choose file to flash. 
     - "File -> Open File...", select main.hex
@@ -20,7 +20,7 @@
 4. Flash image to MCU.
     - "Target -> Program..."
 
-## St flash cmd:
+## ST flash cmd:
 1.st-flash write .\build\main.bin 0x8000000
 
 ## Wire connect:
@@ -52,3 +52,4 @@
     - One solution is to use the heap implementation provided by (https://github.com/DRNadler/FreeRTOS_helpers) which includes memory lock/unlock mechanisms to protect dynamic memory.
     - If you don't want to modify your heap, you can add a line of printf with a fixed string at the beginning of each task to avoid potential issues.
     - If you need to print floating-point numbers, be mindful of the stack size(configMINIMAL_STACK_SIZE).
+2. AXDL345 from GY-291 set the default communication protocol(I2C). If you want to try SPI protocol, you will need to desoldering the resistance which connect to SDO(https://ops9.blogspot.com/2017/09/adxl345.html).
