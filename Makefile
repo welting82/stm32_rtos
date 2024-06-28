@@ -29,6 +29,7 @@ C_SOURCES =  \
 	$(wildcard base/*.c) \
 	$(wildcard rtos/Src/*.c) \
 	$(wildcard User_HandsOn/Src/*.c) \
+	$(wildcard components/Src/*.c) \
 	stm32f4xx_hal_driver/Src/stm32f4xx_hal.c \
 	stm32f4xx_hal_driver/Src/stm32f4xx_hal_adc.c \
 	stm32f4xx_hal_driver/Src/stm32f4xx_hal_adc_ex.c \
@@ -181,7 +182,8 @@ C_INCLUDES =  \
 	-I rtos/Inc \
 	-I User_HandsOn/Inc \
 	-I startup \
-	-I stm32f4xx_hal_driver/Inc 
+	-I stm32f4xx_hal_driver/Inc \
+	-I components/Inc 
 
 
 # compile gcc flags

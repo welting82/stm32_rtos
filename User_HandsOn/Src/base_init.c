@@ -35,6 +35,7 @@ void peripheral_init()
 	Clock_Configuration();
 	LED3_Configuration();
 	UART2_Configuration();
+    SPI5_Configuration();
     xSemaphore = xSemaphoreCreateMutex();
 }
 

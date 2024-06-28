@@ -104,5 +104,42 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
   }
 }
 
+void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
+{
+  if(hspi->Instance == SPI5)
+  {
+    /*
+    PF7 - SCK
+    PF8 - MISO
+    PF9 - MOSI
+    PC1 - CS
+    PA1 - INT1
+    PA2 - INT2
+    */
+
+    // __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    __HAL_RCC_GPIOF_CLK_ENABLE();
+    __HAL_RCC_SPI5_CLK_ENABLE();
+
+    GPIO_InitTypeDef SPI5_GPIO_Handler; /*Create GPIO_InitTypeDef struct instance */
+    SPI5_GPIO_Handler.Pin = GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9;
+    SPI5_GPIO_Handler.Mode = GPIO_MODE_AF_PP;
+    SPI5_GPIO_Handler.Pull = GPIO_PULLUP;
+    SPI5_GPIO_Handler.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    SPI5_GPIO_Handler.Alternate = GPIO_AF5_SPI5;
+    HAL_GPIO_Init(GPIOF, &SPI5_GPIO_Handler);
+
+    SPI5_GPIO_Handler.Pin = GPIO_PIN_1;
+    SPI5_GPIO_Handler.Mode = GPIO_MODE_AF_PP;
+    SPI5_GPIO_Handler.Pull = GPIO_PULLUP;
+    SPI5_GPIO_Handler.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    SPI5_GPIO_Handler.Alternate = GPIO_AF5_SPI5;
+    HAL_GPIO_Init(GPIOC, &SPI5_GPIO_Handler);
+
+    HAL_NVIC_SetPriority(SPI5_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(SPI5_IRQn);
+  }
+}
 
 
