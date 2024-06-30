@@ -39,6 +39,8 @@
 
 
 void SPI5_Configuration(void);
-void L3GD20_SPI_getOutput(void);
+void L3GD20_SPI_getOutput(float* data);
+HAL_StatusTypeDef L3GD20_SPI_SingleByteWrite(char addr, char data);
+char L3GD20_SPI_SingleByteRead(char addr);
 
 #endif /* L3GD20_H */

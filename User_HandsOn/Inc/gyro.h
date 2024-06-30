@@ -2,6 +2,7 @@
 #define GYRO_H
 
 #include "base_init.h"
+#include "L3GD20.h"
 
 void Read_gyro(void* pvParameters);
 

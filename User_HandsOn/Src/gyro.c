@@ -1,11 +1,11 @@
 #include "gyro.h"
-
+extern xSemaphoreHandle xSemaphore;
 
 void Read_gyro(void* pvParameters)
 {
     float data[3] = {0};
     L3GD20_SPI_init();
-    printf(,L3GD20_SPI_getTemp());
+    printf("temp:%d",L3GD20_SPI_getTemp());
 	while (1)
 	{
 		if( xSemaphore != NULL )

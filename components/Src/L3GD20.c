@@ -22,16 +22,16 @@ void SPI5_Configuration(void)
 void L3GD20_SPI_init()
 {
 	//Setting power mode
-	L3GD20_SPI_SingleByteWrite(L3GD20_CTRL_REG1,0xCF);
+	res = L3GD20_SPI_SingleByteWrite(L3GD20_CTRL_REG1,0xCF);
 	//Setting scale
-	L3GD20_SPI_SingleByteWrite(L3GD20_CTRL_REG4,0x30);
+	res = L3GD20_SPI_SingleByteWrite(L3GD20_CTRL_REG4,0x30);
 	return;
 }
 
 int8_t L3GD20_SPI_getTemp()
 {
 	//1LSB = 1 Celsius deg
-	return L3GD20_SPI_SingleByteRead(L3GD20_OUT_TEMP);
+	return (int8_t)L3GD20_SPI_SingleByteRead(L3GD20_OUT_TEMP);
 }
 
 void L3GD20_SPI_getOutput(float* data)
@@ -49,10 +49,10 @@ char L3GD20_SPI_SingleByteRead(char addr)
 	// Set CS low for enable SPI
 	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_RESET);
 
-	tx[0] |= (L3GD20_SPI_READ << L3GD20_SPI_RWbit | addr);
+	tx |= (L3GD20_SPI_READ << L3GD20_SPI_RWbit | addr);
 
-	res = HAL_SPI_Transmit(hspi5, tx, sizeof(tx),HAL_MAX_DELAY);
-	res = HAL_SPI_Receive(hspi5, data, sizeof(data), HAL_MAX_DELAY);
+	res = HAL_SPI_Transmit(&hspi5, (uint8_t*)&tx, sizeof(tx),HAL_MAX_DELAY);
+	res = HAL_SPI_Receive(&hspi5, (uint8_t*)&data, sizeof(data), HAL_MAX_DELAY);
 
 	// Set CS high for disable SPI
 	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
@@ -66,15 +66,14 @@ char L3GD20_SPI_SingleByteRead(char addr)
 
 HAL_StatusTypeDef L3GD20_SPI_SingleByteWrite(char addr, char data)
 {
-	uint8_t tx[2] = 0;
-	char data = 0;
+	uint8_t tx[2] = {0};
 	// Set CS low for enable SPI
 	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_RESET);
 
 	tx[0] |= (L3GD20_SPI_WRITE << L3GD20_SPI_RWbit | addr);
-	rx[1] = data;
+	tx[1] = data;
 
-	res = HAL_SPI_Transmit(hspi5, tx, sizeof(tx),HAL_MAX_DELAY);
+	res = HAL_SPI_Transmit(&hspi5, tx, sizeof(tx),HAL_MAX_DELAY);
 
 	// Set CS high for disable SPI
 	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);

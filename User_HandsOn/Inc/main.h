@@ -4,6 +4,7 @@
 #include "base_init.h"
 #include "uart.h"
 #include "led.h"
+#include "gyro.h"
 
 #define STACK_USAGE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 #define UART_H_TASK_PRIORITY		( tskIDLE_PRIORITY + 1UL )
