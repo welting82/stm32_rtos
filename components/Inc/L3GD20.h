@@ -10,7 +10,7 @@
 #define L3GD20_SPI_READ        1
 
 
-#define L3GD20_DEVID_REG      0x00
+#define L3GD20_DEVID_REG      0x0F
 #define L3GD20_CTRL_REG1      0x20
 #define L3GD20_CTRL_REG2      0x21
 #define L3GD20_CTRL_REG3      0x22

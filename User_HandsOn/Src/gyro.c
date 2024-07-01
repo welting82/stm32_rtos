@@ -13,10 +13,10 @@ void Read_gyro(void* pvParameters)
 			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
 			{
 				L3GD20_SPI_getOutput(&data);
-				printf("X = %6.3f(g), Y = %6.3f(g), Z = %6.3f(g)\r\n",data[0],data[1],data[2]);
+				printf("X = %6.3f(dps), Y = %6.3f(dps), Z = %6.3f(dps)\r\n",data[0],data[1],data[2]);
 				xSemaphoreGive( xSemaphore );
 			}
 		}
-		vTaskDelay(100);
+		vTaskDelay(2000);
 	}
 }
