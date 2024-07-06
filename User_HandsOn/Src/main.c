@@ -76,7 +76,7 @@ int main(void)
 	printf("aaaaa");
 	res = xTaskCreate(send_hello_world, "Send_hello_world.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
 	res = xTaskCreate(Blink_Task, "Blink_LED.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
-	// res = xTaskCreate(Read_gyro, "Read_gyro.", configMINIMAL_STACK_SIZE, NULL, GYRO_TASK_PRIORITY, NULL);
+	res = xTaskCreate(Read_gyro, "Read_gyro.", configMINIMAL_STACK_SIZE, NULL, GYRO_TASK_PRIORITY, NULL);
 
 	xTaskCreate(Show_stack_usage, "Show_stack_usage", configMINIMAL_STACK_SIZE, NULL,STACK_USAGE_TASK_PRIORITY, &pvCreatedTaskShow_stack_usage);
     vTaskStartScheduler();

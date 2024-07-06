@@ -17,6 +17,6 @@ void Read_gyro(void* pvParameters)
 				xSemaphoreGive( xSemaphore );
 			}
 		}
-		vTaskDelay(2000);
+		vTaskDelay(500);
 	}
 }

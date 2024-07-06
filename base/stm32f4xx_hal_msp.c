@@ -126,16 +126,15 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
     SPI5_GPIO_Handler.Pin = GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9;
     SPI5_GPIO_Handler.Mode = GPIO_MODE_AF_PP;
     SPI5_GPIO_Handler.Pull = GPIO_PULLUP;
-    SPI5_GPIO_Handler.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    SPI5_GPIO_Handler.Speed = GPIO_SPEED_FREQ_MEDIUM;
     SPI5_GPIO_Handler.Alternate = GPIO_AF5_SPI5;
     HAL_GPIO_Init(GPIOF, &SPI5_GPIO_Handler);
 
     //CS pin
     SPI5_GPIO_Handler.Pin = GPIO_PIN_1;
-    SPI5_GPIO_Handler.Mode = GPIO_MODE_AF_PP;
-    SPI5_GPIO_Handler.Pull = GPIO_PULLUP;
-    SPI5_GPIO_Handler.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    SPI5_GPIO_Handler.Alternate = GPIO_AF5_SPI5;
+    SPI5_GPIO_Handler.Mode = GPIO_MODE_OUTPUT_PP;
+    SPI5_GPIO_Handler.Pull = GPIO_NOPULL;
+    SPI5_GPIO_Handler.Speed = GPIO_SPEED_FREQ_MEDIUM;
     HAL_GPIO_Init(GPIOC, &SPI5_GPIO_Handler);
 
     //Toggle for SPI idle.
