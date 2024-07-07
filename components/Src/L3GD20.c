@@ -34,11 +34,31 @@ int8_t L3GD20_SPI_getTemp()
 	return (int8_t)L3GD20_SPI_SingleByteRead(L3GD20_OUT_TEMP);
 }
 
+uint8_t L3GD20_SPI_getStatus()
+{
+	return (uint8_t)L3GD20_SPI_SingleByteRead(L3GD20_STATUS_REG);
+}
+
+uint8_t L3GD20_SPI_getCTR_REG3()
+{
+	return (uint8_t)L3GD20_SPI_SingleByteRead(L3GD20_CTRL_REG3);
+}
+
 void L3GD20_SPI_getOutput(float* data)
 {
 	data[0] = (short)(L3GD20_SPI_SingleByteRead(L3GD20_OUT_X_H)<<8 | L3GD20_SPI_SingleByteRead(L3GD20_OUT_X_L));
 	data[1] = (short)(L3GD20_SPI_SingleByteRead(L3GD20_OUT_Y_H)<<8 | L3GD20_SPI_SingleByteRead(L3GD20_OUT_Y_L));
 	data[2] = (short)(L3GD20_SPI_SingleByteRead(L3GD20_OUT_Z_H)<<8 | L3GD20_SPI_SingleByteRead(L3GD20_OUT_Z_L));
+	return;
+}
+
+void L3GD20_SPI_getOutputM(float* data)
+{
+	uint8_t raw_data[6] = {0};
+	L3GD20_SPI_MultiByteRead(L3GD20_OUT_X_L,&raw_data,6);
+	*data = (short) (*(raw_data+1)<<8 | *raw_data);
+	*(data+2) = (short) (*(raw_data+3)<<8 | *(raw_data+2));
+	*(data+1) = (short) (*(raw_data+5)<<8 | *(raw_data+4));
 	return;
 }
 
@@ -59,10 +79,21 @@ char L3GD20_SPI_SingleByteRead(char addr)
 	return data;
 }
 
-// void L3GD20_SPI_MultiByteRead()
-// {
-	
-// }
+void L3GD20_SPI_MultiByteRead(char addr, uint8_t* pdata, uint8_t len)
+{
+	uint8_t tx = 0;
+	// Set CS low for enable SPI
+	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_RESET);
+
+	tx |= (L3GD20_SPI_READ << L3GD20_SPI_RWbit | 1 << L3GD20_SPI_MULTIBYTE | addr);
+
+	res = HAL_SPI_Transmit(&hspi5, (uint8_t*)&tx, sizeof(tx),HAL_MAX_DELAY);
+	res = HAL_SPI_Receive(&hspi5, pdata, len, HAL_MAX_DELAY);
+
+	// Set CS high for disable SPI
+	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_1,GPIO_PIN_SET);
+	return;
+}
 
 HAL_StatusTypeDef L3GD20_SPI_SingleByteWrite(char addr, char data)
 {

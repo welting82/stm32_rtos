@@ -73,7 +73,6 @@ int main(void)
 {
 	int res = 0;
 	peripheral_init();
-	printf("aaaaa");
 	res = xTaskCreate(send_hello_world, "Send_hello_world.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
 	res = xTaskCreate(Blink_Task, "Blink_LED.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
 	res = xTaskCreate(Read_gyro, "Read_gyro.", configMINIMAL_STACK_SIZE, NULL, GYRO_TASK_PRIORITY, NULL);
