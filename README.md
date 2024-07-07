@@ -24,14 +24,14 @@
 1.st-flash write .\build\main.bin 0x8000000
 
 ## Wire connect:
-#UART
+`UART`
 | TTL pin | MCU pin |
 |---------|---------|
 |   RX    |   PD5   |
 |   TX    |   PD6   |
 |   GND   |   GND   |
 
-#SPI
+`SPI`
 | SPI pin | MCU pin |
 |---------|---------|
 |   CLK   |   PF7   |
