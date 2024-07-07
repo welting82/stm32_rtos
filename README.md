@@ -24,10 +24,20 @@
 1.st-flash write .\build\main.bin 0x8000000
 
 ## Wire connect:
+#UART
 | TTL pin | MCU pin |
 |---------|---------|
 |   RX    |   PD5   |
 |   TX    |   PD6   |
+|   GND   |   GND   |
+
+#SPI
+| SPI pin | MCU pin |
+|---------|---------|
+|   CLK   |   PF7   |
+|   MISO  |   PF8   |
+|   MOSI  |   PF9   |
+|   CS    |   PC1   |
 |   GND   |   GND   |
 
 ## Uart protocol:
