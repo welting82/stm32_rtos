@@ -40,6 +40,8 @@
 |   CS    |   PC1   |
 |   GND   |   GND   |
 
+![L3GD20 coordinate](demo/gyro_coordinate.png)
+
 ## Uart protocol:
 - Bard rate: 921600
 - Data bit: 8
@@ -52,3 +54,4 @@
     - One solution is to use the heap implementation provided by (https://github.com/DRNadler/FreeRTOS_helpers) which includes memory lock/unlock mechanisms to protect dynamic memory.
     - If you don't want to modify your heap, you can add a line of printf with a fixed string at the beginning of each task to avoid potential issues.
     - If you need to print floating-point numbers, be mindful of the stack size(configMINIMAL_STACK_SIZE).
+2. SPI CS pin is separate from SPI AF, also need to set as GPIO_OUTPUT.
