@@ -73,12 +73,12 @@ int main(void)
 {
 	int res = 0;
 	peripheral_init();
-	res = xTaskCreate(send_hello_world, "Send_hello_world.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
-	res = xTaskCreate(Blink_Task, "Blink_LED.", configMINIMAL_STACK_SIZE, NULL, UART_H_TASK_PRIORITY, NULL);
+	// res = xTaskCreate(send_hello_world, "Send_hello_world.", configMINIMAL_STACK_SIZE, NULL, BASIC_TASK_PRIORITY, NULL);
+	res = xTaskCreate(Blink_Task, "Blink_LED.", configMINIMAL_STACK_SIZE, NULL, BASIC_TASK_PRIORITY, NULL);
 
-	xTaskCreate(Show_stack_usage, "Show_stack_usage", configMINIMAL_STACK_SIZE, NULL,STACK_USAGE_TASK_PRIORITY, &pvCreatedTaskShow_stack_usage);
-	res = xTaskCreate(send_counting, "Send_counting.", configMINIMAL_STACK_SIZE, NULL, UART_CNT_TASK_PRIORITY, NULL);
-	res = xTaskCreate(calc_Task, "calc_Task.", configMINIMAL_STACK_SIZE, NULL, UART_CNT_TASK_PRIORITY, NULL);
+	// xTaskCreate(Show_stack_usage, "Show_stack_usage", configMINIMAL_STACK_SIZE, NULL,BASIC_TASK_PRIORITY, &pvCreatedTaskShow_stack_usage);
+	res = xTaskCreate(uart_tx_task, "uart_tx_task.", configMINIMAL_STACK_SIZE, NULL, UART_TX_TASK_PRIORITY, NULL);
+	res = xTaskCreate(uart_rx_task, "uart_rx_task.", configMINIMAL_STACK_SIZE, NULL, UART_RX_TASK_PRIORITY, NULL);
     vTaskStartScheduler();
 	while(1)
 	{

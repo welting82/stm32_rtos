@@ -62,29 +62,6 @@ GETCHAR_PROTOTYPE
   return ch;
 }
 
-void calc_Task(void* pvParameters)
-{
-	int idx = 10;
-	while (1)
-	{
-		if( xSemaphore != NULL )
-		{
-			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
-			{
-				if(loop_cnt > 99) loop_cnt = 0;
-				tmp_Buffer[idx] = loop_cnt/10 + 48;
-				tmp_Buffer[idx + 1] = loop_cnt%10 + 48;
-				tmp_Buffer[idx + 2] = '\r';
-				tmp_Buffer[idx + 3] = '\n';
-				tmp_Buffer[idx + 4] = '\0';
-				loop_cnt++;
-				xSemaphoreGive( xSemaphore );
-			}
-		}
-		vTaskDelay(500);
-	}
-}
-
 void send_hello_world(void* pvParameters)
 {
 	while (1)
@@ -101,21 +78,6 @@ void send_hello_world(void* pvParameters)
 	}
 }
 
-void send_counting(void* pvParameters)
-{
-	while (1)
-	{
-		if( xSemaphore != NULL )
-		{
-			if( xSemaphoreTake( xSemaphore, ( TickType_t ) 10 ) == pdTRUE )
-			{
-				HAL_UART_Transmit(&huart2, (uint8_t*)&tmp_Buffer, sizeof(tmp_Buffer),HAL_MAX_DELAY);
-				xSemaphoreGive( xSemaphore );
-			}
-		}
-		vTaskDelay(500);
-	}
-}
 void Show_stack_usage(void* pvParameters)
 {
 	unsigned portBASE_TYPE uxHighWaterMark;
@@ -131,5 +93,21 @@ void Show_stack_usage(void* pvParameters)
 			}
 		}
 			vTaskDelay(5000);
+	}
+}
+
+void uart_tx_task(void* pvParameters)
+{
+	while (1)
+	{
+		/* code */
+	}
+}
+
+void uart_rx_task(void* pvParameters)
+{
+	while (1)
+	{
+		/* code */
 	}
 }
