@@ -71,14 +71,15 @@ void vApplicationIdleHook( void )
 
 int main(void)
 {
-	int res = 0;
+	int res = 0; 
 	peripheral_init();
+	printf("Start STM32 with RTOS!!\r\n");
 	// res = xTaskCreate(send_hello_world, "Send_hello_world.", configMINIMAL_STACK_SIZE, NULL, BASIC_TASK_PRIORITY, NULL);
 	res = xTaskCreate(Blink_Task, "Blink_LED.", configMINIMAL_STACK_SIZE, NULL, BASIC_TASK_PRIORITY, NULL);
-
+	uart_rx_task();
 	// xTaskCreate(Show_stack_usage, "Show_stack_usage", configMINIMAL_STACK_SIZE, NULL,BASIC_TASK_PRIORITY, &pvCreatedTaskShow_stack_usage);
-	res = xTaskCreate(uart_tx_task, "uart_tx_task.", configMINIMAL_STACK_SIZE, NULL, UART_TX_TASK_PRIORITY, NULL);
-	res = xTaskCreate(uart_rx_task, "uart_rx_task.", configMINIMAL_STACK_SIZE, NULL, UART_RX_TASK_PRIORITY, NULL);
+	// res = xTaskCreate(uart_tx_task, "uart_tx_task.", configMINIMAL_STACK_SIZE, NULL, UART_TX_TASK_PRIORITY, NULL);
+	// res = xTaskCreate(uart_rx_task, "uart_rx_task.", configMINIMAL_STACK_SIZE, NULL, UART_RX_TASK_PRIORITY, NULL);
     vTaskStartScheduler();
 	while(1)
 	{

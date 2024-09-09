@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
+DMA_HandleTypeDef hdma_usart2_rx;
 
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
@@ -120,7 +121,6 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
   	HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
     __HAL_LINKDMA(huart,hdmatx,hdma_usart2_tx);  //link huart->hdmarx to hdma_usart2_tx
 
-    DMA_HandleTypeDef hdma_usart2_rx;
     hdma_usart2_rx.Instance = DMA1_Stream5;
     hdma_usart2_rx.Init.Channel = DMA_CHANNEL_4;
     hdma_usart2_rx.Init.Direction  = DMA_PERIPH_TO_MEMORY;

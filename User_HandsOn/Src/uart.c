@@ -4,10 +4,8 @@ extern xSemaphoreHandle xSemaphore;
 xTaskHandle pvCreatedTaskShow_stack_usage;
 
 UART_HandleTypeDef huart2; /*Create UART_InitTypeDef struct instance */
-char RX_Buffer; //"Interrupt inputt"
-char rec_data[100]; //"receice data"
+uint8_t DMA_Buffer[20] = {0xAA};
 char TX_Buffer[50] = "Hello World!!!\r\n";
-char tmp_Buffer[20] = "Loop Cnt: ";
 uint8_t Uart2_Rx_Cnt = 0;
 uint8_t loop_cnt = 0;
 
@@ -20,26 +18,6 @@ void UART2_Configuration(void)
 	huart2.Init.WordLength = UART_WORDLENGTH_8B;
 	huart2.Init.StopBits = UART_STOPBITS_1;
 	HAL_UART_Init(&huart2);
-}
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-
-	if((Uart2_Rx_Cnt == sizeof(rec_data)-2) || (RX_Buffer == '\r') || (RX_Buffer == '\n'))
-	{
-		rec_data[Uart2_Rx_Cnt] = '\r';
-		rec_data[Uart2_Rx_Cnt+1] = '\n';
-
-		HAL_UART_Transmit(&huart2, (uint8_t *)&rec_data, sizeof(rec_data),HAL_MAX_DELAY);
-		if(Uart2_Rx_Cnt == sizeof(rec_data)-2) HAL_UART_Transmit(&huart2, (uint8_t *)"overflow\r\n", 10,HAL_MAX_DELAY);
-		memset(rec_data,0,sizeof(rec_data));
-		Uart2_Rx_Cnt = 0;
-	}
-	else
-	{
-		rec_data[Uart2_Rx_Cnt++] = RX_Buffer;
-	}
-	HAL_UART_Receive_IT(huart, (uint8_t*)&RX_Buffer, 1);
 }
 
 PUTCHAR_PROTOTYPE
@@ -92,22 +70,30 @@ void Show_stack_usage(void* pvParameters)
 				xSemaphoreGive( xSemaphore );
 			}
 		}
-			vTaskDelay(5000);
+			vTaskDelay(1000);
 	}
 }
 
-void uart_tx_task(void* pvParameters)
+void uart_tx_task()
 {
-	while (1)
-	{
-		/* code */
-	}
+	// while (1)
+	// {
+		HAL_UART_Transmit(&huart2, DMA_Buffer, 10,HAL_MAX_DELAY);
+		// vTaskDelay(500);
+	// }
 }
 
-void uart_rx_task(void* pvParameters)
+void uart_rx_task()
 {
-	while (1)
-	{
-		/* code */
-	}
+	// while (1)
+	// {
+		HAL_UART_Receive_DMA(&huart2, DMA_Buffer, 10);
+		// vTaskDelay(100);
+	// }
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	uart_tx_task();
+	uart_rx_task();
 }
