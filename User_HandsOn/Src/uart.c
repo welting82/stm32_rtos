@@ -70,7 +70,7 @@ void Show_stack_usage(void* pvParameters)
 				xSemaphoreGive( xSemaphore );
 			}
 		}
-			vTaskDelay(1000);
+			vTaskDelay(500);
 	}
 }
 
@@ -87,13 +87,19 @@ void uart_rx_task()
 {
 	// while (1)
 	// {
-		HAL_UART_Receive_DMA(&huart2, DMA_Buffer, 10);
+		HAL_UARTEx_ReceiveToIdle_DMA(&huart2, DMA_Buffer, 10);
 		// vTaskDelay(100);
 	// }
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size)
 {
-	uart_tx_task();
+	DMA_Buffer[size] = '\r';
+	DMA_Buffer[size+1] = '\n';
+	HAL_UART_Transmit_DMA(&huart2, DMA_Buffer, size + 2);
+}
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
 	uart_rx_task();
 }

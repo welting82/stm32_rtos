@@ -21,6 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 DMA_HandleTypeDef hdma_usart2_rx;
+DMA_HandleTypeDef hdma_usart2_tx;
 
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
@@ -105,7 +106,6 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
     HAL_NVIC_EnableIRQ(USART2_IRQn);
 
 
-    DMA_HandleTypeDef hdma_usart2_tx;
     hdma_usart2_tx.Instance = DMA1_Stream6;
     hdma_usart2_tx.Init.Channel = DMA_CHANNEL_4;
     hdma_usart2_tx.Init.Direction  = DMA_MEMORY_TO_PERIPH;
@@ -117,8 +117,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
     hdma_usart2_tx.Init.Priority = DMA_PRIORITY_LOW;
     hdma_usart2_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     HAL_DMA_Init(&hdma_usart2_tx);
-    HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
-  	HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
+    HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
+  	HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
     __HAL_LINKDMA(huart,hdmatx,hdma_usart2_tx);  //link huart->hdmarx to hdma_usart2_tx
 
     hdma_usart2_rx.Instance = DMA1_Stream5;

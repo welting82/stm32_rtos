@@ -42,6 +42,7 @@
 extern UART_HandleTypeDef huart2;
 extern I2C_HandleTypeDef  hi2c1;;
 extern DMA_HandleTypeDef hdma_usart2_rx;
+extern DMA_HandleTypeDef hdma_usart2_tx;
 
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
@@ -186,4 +187,9 @@ void USART2_IRQHandler(void)
 void DMA1_Stream5_IRQHandler(void)
 {
   HAL_DMA_IRQHandler(&hdma_usart2_rx);
+}
+
+void DMA1_Stream6_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(&hdma_usart2_tx);
 }
